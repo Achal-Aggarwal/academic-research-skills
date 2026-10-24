@@ -7,7 +7,7 @@ any check for it. It is the first part of #1002; the second part, a check
 between the panel and the editorial synthesizer, is planned only when the
 decision rule in `plan.json` says so.
 
-Suite class: `llm_judged` (`../suite_registry.json`). Status: run once (plan version 8, 2026-10-24); the results are in `PREREGISTRATION.md` § Results. No `heldout-measurement/1.1` report row is published: adjudication is deferred, so the headline is not computed.
+Suite class: `llm_judged` (`../suite_registry.json`). Status: run once (plan version 8, 2026-10-24), plus a contrast test of the Claude session models (plan version 10, 2026-10-25); the results are in `PREREGISTRATION.md`. No `heldout-measurement/1.1` report row is published: adjudication is deferred, so the headline is not computed.
 
 ## What is measured
 
@@ -72,6 +72,18 @@ repository. Raw outputs are written once and never overwritten.
    calls of all three roles) and `call_attempts.json` (every attempt).
 8. Publish a `heldout-measurement/1.1` report row in this directory, with the
    raw outputs, the execution manifest, and the adjudication record.
+
+Plan version 10 adds a separate contrast test for the Claude session models
+(`PREREGISTRATION.md`, Amendments). It reads nothing but the contrast batches
+and changes no claim result:
+
+1. Rebuild the batches with `--match-manifest` (step 3).
+2. Probe each model once through the same fence, and stop if the answer names
+   any instruction from the maintainer's own settings.
+3. `run --judge <claude_opus|claude_fable> --replicate <1|2> --contrast-only --batches $W/batches --out $W/runs`.
+   The token is read from `~/.config/ars-889/oauth_token` and goes only into the
+   call's environment.
+4. `contrast-score --batches $W/batches --runs $W/runs --judge claude_opus --judge claude_fable`.
 
 ## Boundaries
 
